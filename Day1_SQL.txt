@@ -1,0 +1,102 @@
+select * from customers
++------+----------+----------+--------+------+
+| cnum | cname    | city     | rating | snum |
++------+----------+----------+--------+------+
+| 2001 | Hoffman  | London   |    100 | 1001 |
+| 2002 | Giovanni | Rome     |    200 | 1003 |
+| 2003 | Liu      | San Jose |    200 | 1002 |
+| 2004 | Grass    | Berlin   |    300 | 1002 |
+| 2006 | Clemens  | London   |    100 | 1001 |
+| 2007 | Pereira  | Rome     |    100 | 1004 |
+| 2008 | Cisneros | San Jose |    300 | 1007 |
++------+----------+----------+--------+------+
+
+select * from orders;
++------+---------+------------+------+------+
+| onum | amt     | odate      | cnum | snum |
++------+---------+------------+------+------+
+| 3001 |   18.69 | 1996-10-03 | 2008 | 1007 |
+| 3002 | 1900.10 | 1996-10-03 | 2007 | 1004 |
+| 3003 |  767.19 | 1996-10-03 | 2001 | 1001 |
+| 3005 | 5160.45 | 1996-10-03 | 2003 | 1002 |
+| 3006 | 1098.16 | 1996-10-03 | 2008 | 1007 |
+| 3007 |   75.75 | 1996-10-04 | 2002 | 1003 |
+| 3008 | 4723.00 | 1996-10-05 | 2006 | 1001 |
+| 3009 | 1713.23 | 1996-10-04 | 2002 | 1003 |
+| 3010 | 1309.95 | 1996-10-06 | 2004 | 1002 |
+| 3011 | 9891.88 | 1996-10-06 | 2006 | 1001 |
++------+---------+------------+------+------+
+
+select * from salespeople;
++------+---------+-----------+------+
+| snum | sname   | city      | comm |
++------+---------+-----------+------+
+| 1001 | Peel    | London    | 0.12 |
+| 1002 | Serres  | San Jose  | 0.13 |
+| 1003 | AxelRod | New York  | 0.10 |
+| 1004 | Motika  | London    | 0.11 |
+| 1005 | Fran    | London    | 0.26 |
+| 1007 | Rifkin  | Barcelona | 0.15 |
++------+---------+-----------+------+
+
+1. List all the columns of the Salespeople table.
+desc salespeople;
+
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| snum  | int          | NO   | PRI | NULL    |       |
+| sname | varchar(30)  | YES  |     | NULL    |       |
+| city  | varchar(30)  | YES  |     | NULL    |       |
+| comm  | decimal(4,2) | YES  |     | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+
+2. List all customers with a rating of 100.
+select * from customers where rating = 100;
+
++------+---------+--------+--------+------+
+| cnum | cname   | city   | rating | snum |
++------+---------+--------+--------+------+
+| 2001 | Hoffman | London |    100 | 1001 |
+| 2006 | Clemens | London |    100 | 1001 |
+| 2007 | Pereira | Rome   |    100 | 1004 |
++------+---------+--------+--------+------+
+
+3. Find all records in the Customer table with NULL values in the city column.
+select * from customers where city is null;
+
+Empty set (0.005 sec)
+
+4. Find the largest order taken by each salesperson on each date.
+select sname , max(amt) from salespeople inner join orders on salespeople.snum=orders.snum group by sname;
+
++---------+----------+
+| sname   | max(amt) |
++---------+----------+
+| Rifkin  |  1098.16 |
+| Motika  |  1900.10 |
+| Peel    |  9891.88 |
+| Serres  |  5160.45 |
+| AxelRod |  1713.23 |
++---------+----------+
+
+5. Arrange the Orders table by descending customer number.
+select * from orders order by cnum desc ;
+
++------+---------+------------+------+------+
+| onum | amt     | odate      | cnum | snum |
++------+---------+------------+------+------+
+| 3001 |   18.69 | 1996-10-03 | 2008 | 1007 |
+| 3006 | 1098.16 | 1996-10-03 | 2008 | 1007 |
+| 3002 | 1900.10 | 1996-10-03 | 2007 | 1004 |
+| 3008 | 4723.00 | 1996-10-05 | 2006 | 1001 |
+| 3011 | 9891.88 | 1996-10-06 | 2006 | 1001 |
+| 3010 | 1309.95 | 1996-10-06 | 2004 | 1002 |
+| 3005 | 5160.45 | 1996-10-03 | 2003 | 1002 |
+| 3007 |   75.75 | 1996-10-04 | 2002 | 1003 |
+| 3009 | 1713.23 | 1996-10-04 | 2002 | 1003 |
+| 3003 |  767.19 | 1996-10-03 | 2001 | 1001 |
++------+---------+------------+------+------+
+
+Viva Question 
+select deptname , avg(salary) from emp inner join dept on emp.deptid=dept.deptid group by deptname having avg(salary) > (select avg(salary) from emp join dept on emp.deptid = dept.deptid where deptname = 'HR' );
