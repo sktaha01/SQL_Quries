@@ -1,0 +1,105 @@
+6. Find which salespeople currently have orders in the Orders table.
+
+select o.snum, s.sname
+from orders o,salespeople s
+where o.snum = s.snum
+group by snum;
+
+// select distinct snum from orders;
+
++------+---------+
+| snum | sname   |
++------+---------+
+| 1001 | Peel    |
+| 1002 | Serres  |
+| 1003 | AxelRod |
+| 1004 | Motika  |
+| 1007 | Rifkin  |
++------+---------+
+
+7. List names of all customers matched with the salespeople serving them.
+
+select c.cname, s.sname
+from customers c, salespeople s
+where c.snum = s.snum;
+
++----------+---------+
+| cname    | sname   |
++----------+---------+
+| Hoffman  | Peel    |
+| Giovanni | AxelRod |
+| Liu      | Serres  |
+| Grass    | Serres  |
+| Clemens  | Peel    |
+| Pereira  | Motika  |
+| Cisneros | Rifkin  |
++----------+---------+
+
+8. Find the names and numbers of all salespeople who had more than one customer.
+
+select c.snum, s.sname
+from customers c ,salespeople s
+where c.snum = s.snum
+group by c.snum
+having count(c.snum)>1;
+
++------+--------+
+| snum | sname  |
++------+--------+
+| 1001 | Peel   |
+| 1002 | Serres |
++------+--------+
+
+9. Count the orders of each of the salespeople and output the results in descending order.
+
+select s.snum  ,s.sname,  count(o.snum) No_Of_Orders
+from salespeople s, orders o 
+where s.snum =o.snum
+group by s.snum
+order by count(o.snum) desc;
+
+select s.snum  ,s.sname,  count(o.snum) No_Of_Orders
+from salespeople s
+left join orders o 
+on s.snum =o.snum
+group by s.snum
+order by count(o.snum) desc;
+
++------+---------+--------------+
+| snum | sname   | No_Of_Orders |
++------+---------+--------------+
+| 1001 | Peel    |            3 |
+| 1002 | Serres  |            2 |
+| 1003 | AxelRod |            2 |
+| 1007 | Rifkin  |            2 |
+| 1004 | Motika  |            1 |
+| 1005 | Fran    |            0 |
++------+---------+--------------+
+
+10. List the Customer table if and only if one or more of the customers in the Customer table are located in San Jose.
+
+Select * 
+from customers 
+where exists (select * from customers where city = 'San Jose');
+
++------+----------+----------+--------+------+
+| cnum | cname    | city     | rating | snum |
++------+----------+----------+--------+------+
+| 2001 | Hoffman  | London   |    100 | 1001 |
+| 2002 | Giovanni | Rome     |    200 | 1003 |
+| 2003 | Liu      | San Jose |    200 | 1002 |
+| 2004 | Grass    | Berlin   |    300 | 1002 |
+| 2006 | Clemens  | London   |    100 | 1001 |
+| 2007 | Pereira  | Rome     |    100 | 1004 |
+| 2008 | Cisneros | San Jose |    300 | 1007 |
++------+----------+----------+--------+------+
+
+
+
+
+
+
+
+
+
+
